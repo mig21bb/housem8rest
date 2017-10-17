@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+  <!--
+  Material Design Lite
+  Copyright 2015 Google Inc. All rights reserved.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  https://www.apache.org/licenses/LICENSE-2.0
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License
+  -->
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps."/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0"/>
+    <title>housem8</title>
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes"/>
+    <link rel="icon" sizes="192x192" href="css/images/android-desktop.png"/>
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="apple-mobile-web-app-title" content="Material Design Lite"/>
+    <link rel="apple-touch-icon-precomposed" href="css/images/ios-desktop.png"/>
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="css/images/touch/ms-touch-icon-144x144-precomposed.png"/>
+    <meta name="msapplication-TileColor" content="#3372DF"/>
+    <link rel="shortcut icon" href="css/images/favicon.png"/>
+    <!-- SEO: If your mobile URL is different from the desktop URL, add a canonical link to the desktop page https://developers.google.com/webmasters/smartphone-sites/feature-phones -->
+    <!--
+    <link rel="canonical" href="http://www.example.com/">
+    -->
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.cyan-light_blue.min.css"/>
+    <link rel="stylesheet" href="/webjars/bootstrap/3.3.7-1/css/bootstrap.css"/>
+    <link rel="stylesheet" href="/css/styles.css" data-version="2003"/>
+    <style>
+    #view-source {
+    position: fixed;
+    display: block;
+    right: 0;
+    bottom: 0;
+    margin-right: 40px;
+    margin-bottom: 40px;
+    z-index: 900;
+    }
+    </style>
+  </head>
+  <body>
+    <div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
+      <!--header-->
+      <div th:replace="header :: header"></div>
+      <!--/header-->
+      <div class="demo-drawer mdl-layout__drawer mdl-color--blue-grey-900 mdl-color-text--blue-grey-50">
+        <!--header-->
+        <th:block  th:if="${mate.activo}">
+          <div th:replace="drawerHeader :: dHeader"></div>
+        </th:block>
+        <th:block th:if="${!mate.activo}">
+          <div  th:replace="login :: loginForm"></div>
+        </th:block>
+        <!--/header-->
+        <!--nav-->
+        <div th:replace="nav :: navigation"></div>
+        <!--/nav-->
+      </div>
+      <main class="mdl-layout__content mdl-color--grey-100">
+        <div class="mdl-grid demo-content">
+          
+          <!-- House Card -->
+          <div th:fragment="costsList" class="houseCard mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
+            <div class="mdl-card__title">
+              <h2 th:text="${userHouse.street}+' '+${userHouse.number}+','+${userHouse.city}+'/ '+#{costs}" class="mdl-card__title-text">Welcome</h2>
+              <button id="period-list"
+              class="mdl-button mdl-js-button mdl-button--raised">
+              <span th:text="${period}">201706<i class="material-icons">more_vert</i></span>
+              </button>
+              <ul id="periodList" class="mdl-menu mdl-js-menu mdl-js-ripple-effect"
+                for="period-list">
+
+                <li th:each="fullyear: ${fullYear}" class="mdl-menu__item">
+                  <a  th:text="${fullyear}" th:selected="${fullyear==period}"
+                   th:href="@{'/myCosts/'+${fullyear}+'/'+ ${selectedMate.id}+'/'+${selectedCostFamily.id}}"></a>
+                </li>
+                
+              </ul>
+              <span id="mates-menu"
+                class="mdl-button mdl-js-button mdl-button--raised">
+                <span th:text="${selectedMate != null} ? ${selectedMate.name} :#{see_all}">201706<i class="material-icons">more_vert</i></span>
+              </span>
+              <ul id="mates-List" class="mdl-menu mdl-js-menu mdl-js-ripple-effect"
+                for="mates-menu">
+                <li>
+                   <a  th:text="#{see_all}" th:href="@{'/myCosts/'+${period}+'/0/'+${selectedCostFamily.id}}"></a>
+                </li>
+                <li th:each="houseOfMates: ${houseOfMates}" class="mdl-menu__item">
+                  <a  th:text="*{houseOfMates.name}" th:href="@{'/myCosts/'+${period}+'/'+*{houseOfMates.id}+'/'+${selectedCostFamily.id}}"></a>
+                </li>
+                
+              </ul>
+               <span id="costFamily-menu"
+                class="mdl-button mdl-js-button mdl-button--raised">
+                <span th:text="${selectedCostFamily?.id != null} ? ${selectedCostFamily.name} :#{see_all}">201706<i class="material-icons">more_vert</i></span>
+              </span>
+              <ul id="costFamily-List" class="mdl-menu mdl-js-menu mdl-js-ripple-effect"
+                for="costFamily-menu">
+                <li>
+                   <a  th:text="#{see_all}" th:href="@{'/myCosts/'+${period}+'/'+${selectedMate.id}+'/0'}"></a>
+                </li>
+                <li th:each="costFamily : ${costFamily}" class="mdl-menu__item">
+                  <a  th:text="*{costFamily.name}" th:href="@{'/myCosts/'+${period}+'/'+${selectedMate.id}+'/'+*{costFamily.id}}"></a>
+                </li>
+                
+              </ul>
+            </div>
+            
+            <div class="mdl-card__supporting-text">
+              <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable">
+                <thead>
+                  <tr>
+                    <th  class="mdl-data-table__cell--non-numeric">Tipo</th>
+                    <th class="mdl-data-table__cell--non-numeric">Fecha</th>
+                    <th >Importe</th>
+                    <th  class="mdl-data-table__cell--non-numeric">Proveedor</th>
+                    <th  class="mdl-data-table__cell--non-numeric">Mate</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr th:each="cost : ${costs}">
+                    <td th:text="${cost.costFamily.description}" th:title="${cost.description}"  class="mdl-data-table__cell--non-numeric">Comida-Limpieza</td>
+                    <td th:text="${cost.datetime}" class="mdl-data-table__cell--non-numeric">2017-08-3</td>
+                    <td th:text="${cost.amount}+' €'">2.90€</td>
+                    <td ><img class="commerce_logo" th:src="${cost.commerce.logo}" th:alt="${cost.commerce.name}"/>
+                    </td>
+                    <td th:text="${cost.mateId.name}">mab</td>
+                  </tr>
+                  <tr th:remove="all">
+                    <td class="mdl-data-table__cell--non-numeric">Plywood (Birch)</td>
+                    <td class="mdl-data-table__cell--non-numeric">50</td>
+                    <td class="mdl-data-table__cell--non-numeric">$1.25</td>
+                    <td  class="mdl-data-table__cell--non-numeric">Proveedor</td>
+                    <td  class="mdl-data-table__cell--non-numeric">Mate</td>
+                  </tr>
+                  <tr th:remove="all">
+                    <td class="mdl-data-table__cell--non-numeric">Plywood (Birch)</td>
+                    <td class="mdl-data-table__cell--non-numeric">10</td>
+                    <td class="mdl-data-table__cell--non-numeric">$2.35</td>
+                    <td  class="mdl-data-table__cell--non-numeric">Proveedor</td>
+                    <td  class="mdl-data-table__cell--non-numeric">Mate</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+            <div class="mdl-card__actions mdl-card--border">
+              <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+                Get Started
+              </a>
+            </div>
+          </div>
+          <div th:fragment="newCost" id="new_cost"  style="display: none" class="houseCard mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
+            <div class="mdl-card__title">
+              <h2 class="mdl-card__title-text">New Cost</h2>
+            </div>
+            <div class="mdl-card__supporting-text mdl-grid">
+              <div class="mdl-cell--8-col">
+                <form  id="newCostForm" action="#" th:action="@{/newCost}" th:object="${cost}" method="post" >
+                  
+                  
+                  <div class="mdl-textfield mdl-js-textfield mdl-cell--3-col">
+                    <input class="mdl-textfield__input mdl-color-text--grey-600" type="text" pattern="-?[0-9]*([.,]?[0-9]+)?" name="amount" required="required"/>
+                    <label th:text="#{amount}" class="mdl-textfield__label mdl-color-text--grey-600" for="floor">Amount </label>
+                    <span th:text="#{incorrect_number}" class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                  <div  class="mdl-textfield mdl-js-textfield mdl-cell--1-col">
+                    <span class="mdl-textfield__input mdl-color-text--grey-600" th:text="#{coin}">€</span>
+                  </div>
+                  <div class="mdl-textfield mdl-js-textfield mdl-cell--8-col">
+                    <select class="mdl-textfield__input mdl-color-text--grey-600" name="costFamily"  th:field="*{costFamily}"  required="required">
+                      <option th:each="costFamily : ${costFamily}" th:text="${costFamily.name}" th:selected="${costFamily.id==1}" th:value="${costFamily.id}">Groceries</option>
+                      
+                      <option th:remove="all" value="2">Petrol</option>
+                      <option th:remove="all" value="3">Each 3 months</option>
+                      <option th:remove="all" value="150">Half year</option>
+                    </select>
+                  </div>
+                  
+                  <div class="mdl-textfield mdl-js-textfield mdl-cell--6-col">
+                    <select class="mdl-textfield__input mdl-color-text--grey-600" th:field="*{period}" name="period">
+                      <option value="" selected="true">Occasional</option>
+                      <option value="30">Monthly</option>
+                      <option value="60">Each 2 months</option>
+                      <option value="120">Each 3 months</option>
+                      <option value="150">Half year</option>
+                      <option value="365">Yearly</option>
+                    </select>
+                    
+                  </div>
+                  <div class="mdl-textfield mdl-js-textfield mdl-cell--6-col">
+                    <input id="newCostDateTime" class="mdl-textfield__input mdl-color-text--grey-600" type="text"
+                    value="${#dates.format(#dates.createNow(), 'dd/MMM/yyyy HH:mm')}" th:field="*{datetime}" name="datetime" required="required"/>
+                    
+                  </div>
+                  <div class="mdl-cell--12-col  mdl-cell  mdl-grid">
+                    <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--6-col">
+                      
+                      <label th:text="#{commerce}" class=" mdl-textfield__label mdl-color-text--grey-600" for="floor">Commerce</label>
+                      <select class="mdl-textfield__input mdl-color-text--grey-600" name="commerce" th:field="*{commerce}" required="required">
+                        
+                        <option th:each="commerce : ${commerce}" th:text="${commerce.name}" th:selected="${commerce.id==1}" th:value="${commerce.id}">Groceries</option>
+                        <option th:remove="all" value="2">Petrol</option>
+                        <option th:remove="all" value="3">Each 3 months</option>
+                        <option th:remove="all" value="150">Half year</option>
+                      </select>
+                    </div>
+                    <div class="mdl-cell mdl-cell--4-col" >
+                      <span id="newCommerce" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect" th:title="#{new_commerce}">
+                        <i class="material-icons">add</i>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="mdl-textfield mdl-js-textfield mdl-cell--12-col">
+                    <input class="mdl-textfield__input mdl-color-text--grey-600" type="text" th:field="*{description}" name="description" />
+                    <label th:text="#{description}" class="mdl-textfield__label mdl-color-text--grey-600" for="country">Descripcion</label>
+                    
+                  </div>
+                  
+                  
+                  <input th:value="#{save}" type="submit" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect"/>
+                </form>
+              </div>
+              <div id="newCommerceDiv" class="mdl-grid mdl-cell--4-col"  style="display: none">
+                <form id="newCommerceForm" action="#" th:object="${commerce}" method="post" >
+                  
+                  <div class="mdl-grid">
+                    <img id="newCommerceHeader" src=""/>
+                    <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--10-col">
+                      <input class="mdl-textfield__input mdl-color-text--grey-600" type="text" id="commerceName"  name="name" required="required"/>
+                      <label th:text="#{name}" class="mdl-textfield__label mdl-color-text--grey-600" for="floor">Amount </label>
+                    </div>
+                    <div class=" mdl-cell mdl-cell--2-col">
+                      <!-- Right aligned menu below button -->
+                      <span id="icon-menu"
+                        class="mdl-button mdl-js-button mdl-button--icon">
+                        <i class="material-icons">more_vert</i>
+                      </span>
+                      <ul id="iconList" class="mdl-menu mdl-js-menu mdl-js-ripple-effect"
+                        for="icon-menu">
+                        
+                        
+                      </ul>
+                      
+                    </div>
+                    <input type="hidden" name="logo"  value=""/>
+                    <select class="mdl-textfield__input mdl-cell mdl-cell--12-col mdl-color-text--grey-600" name="costFamily" >
+                      <option value=""></option>
+                      <option th:each="costFamily : ${costFamily}" th:text="${costFamily.name}"  th:value="${costFamily.id}">Groceries</option>
+                      <option th:remove="all" value="2">Petrol</option>
+                      <option th:remove="all" value="3">food</option>
+                      <option th:remove="all" value="150">savings</option>
+                    </select>
+                    
+                    
+                    
+                    <div  class="mdl-cell--4-col" style="display: none">
+                      <style>
+                      #map {
+                      height: 400px;
+                      width: 100%;
+                      }
+                      </style>
+                      <div id="map"></div>
+                      
+                    </div>
+                  </div>
+                  <div class="mdl-card__actions mdl-card--border">
+                    <input type="submit" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect"/>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="mdl-card__actions mdl-card--border">
+              
+              <input th:value="#{cancel}" onclick="javascript:cancelNew('cost')" type="button" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect"/>
+              
+            </div>
+            
+          </div>
+          
+        </div>
+        
+        
+        
+      </main>
+    </div>
+    <th:block  th:if="${mate.activo}">
+      <a th:href="@{/newHouse}" th:text="#{new_house}"  href="singup.html" target="_blank" id="view-source" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color-text--white">Nueva Habitacion</a>
+    </th:block>
+    <th:block th:if="${!mate.activo}">
+      <a th:href="@{/singup}" th:text="#{new_user}"  href="singup.html" target="_blank" id="view-source" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color-text--white">Nueva Cuenta</a>
+    </th:block>
+    <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <script src="/webjars/jquery/3.1.1/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
+    <script src="/js/index.js" data-version="2003"></script>
+    <script>
+    function initMap() {
+    var uluru = {lat: -25.363, lng: 131.044};
+    var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 4,
+    center: uluru
+    });
+    var marker = new google.maps.Marker({
+    position: uluru,
+    map: map
+    });
+    }
+    </script>
+    <script async="true" defer="true" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAEym5xqbJwHB4t35Hmd0QPQe5LBA9ZNNM&amb;callback=initMap">
+    
+    </script>
+    
+  </body>
+</html>

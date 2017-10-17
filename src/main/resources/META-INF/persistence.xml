@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="tk.housem8_housem8_jar_0.0.1-SNAPSHOTPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>tk.housem8.housem8.entities.Commerce</class>
+    <class>tk.housem8.housem8.entities.Compensation</class>
+    <class>tk.housem8.housem8.entities.Cost</class>
+    <class>tk.housem8.housem8.entities.CostFamily</class>
+    <class>tk.housem8.housem8.entities.House</class>
+    <class>tk.housem8.housem8.entities.Mate</class>
+    <class>tk.housem8.housem8.entities.Ocupation</class>
+    <class>tk.housem8.housem8.entities.Pictures</class>
+    <class>tk.housem8.housem8.entities.Room</class>
+    <class>tk.housem8.housem8.entities.RoomClass</class>
+    <class>tk.housem8.housem8.entities.CostRest</class>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/housem8_schema?zeroDateTimeBehavior=convertToNull"/>
+      <property name="javax.persistence.jdbc.user" value="root"/>
+      <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+      <property name="javax.persistence.jdbc.password" value=""/>
+    </properties>
+  </persistence-unit>
+</persistence>
