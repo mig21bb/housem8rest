@@ -53,7 +53,7 @@ public class Cost implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-    @Size(max = 45)
+    @Size(max = 200)
     @Column(name = "description")
     private String description;
     @Column(name = "period")
@@ -91,8 +91,8 @@ public class Cost implements Serializable {
     @JsonBackReference(value="mateId")
     private Mate mate;
 
-    @JoinColumn(name = "COMMERCE_id", referencedColumnName = "id")
-    @ManyToOne(optional = true)
+    @JoinColumn(name = "commerce_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
     @JsonBackReference(value="commerce")
     private Commerce commerce;
 

@@ -108,9 +108,11 @@ public class House implements Serializable {
     private Date fechaBorrado;
     @Column(name = "activo")
     private boolean activo;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "house",fetch = FetchType.LAZY)
     @JsonManagedReference(value="houseId")
     private List<Cost> costList;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "houseId",fetch = FetchType.LAZY)
     @JsonManagedReference(value="houseId")
     private List<Room> roomList;
