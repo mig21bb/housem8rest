@@ -78,7 +78,7 @@ public class Commerce implements Serializable {
     private boolean activo;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "commerce",fetch = FetchType.LAZY)
-    @JsonManagedReference(value="commerce")
+    @JsonManagedReference(value="commerceId")
     private List<Cost> costList;
     
     public Commerce() {

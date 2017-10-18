@@ -93,7 +93,7 @@ public class Cost implements Serializable {
 
     @JoinColumn(name = "commerce_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    @JsonBackReference(value="commerce")
+    @JsonBackReference(value="commerceId")
     private Commerce commerce;
 
     public Cost() {
