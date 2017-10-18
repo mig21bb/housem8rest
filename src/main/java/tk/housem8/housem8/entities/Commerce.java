@@ -62,7 +62,7 @@ public class Commerce implements Serializable {
     @Column(name = "logo")
     private String logo;
     @JoinColumn(name = "cost_family", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = true)
     private CostFamily costFamily;
     
     @Column(name = "fecha_creacion")
